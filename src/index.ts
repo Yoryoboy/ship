@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
 
 const app = express();
@@ -18,11 +18,11 @@ const SYSTEMS = Object.keys(SYSTEM_CODES);
 
 let currentSystem: string = SYSTEMS[Math.floor(Math.random() * SYSTEMS.length)];
 
-app.get("/status", (_req, res) => {
+app.get("/status", (_req: Request, res: Response) => {
   res.json({ damaged_system: currentSystem });
 });
 
-app.get("/repair-bay", (_req, res) => {
+app.get("/repair-bay", (_req: Request, res: Response) => {
   const code = SYSTEM_CODES[currentSystem];
   const html = `
     <!DOCTYPE html>
