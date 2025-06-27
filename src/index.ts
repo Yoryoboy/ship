@@ -37,7 +37,7 @@ app.get("/repair-bay", (_req: Request, res: Response) => {
   res.send(html);
 });
 
-app.post("/teapot", (_req, res) => {
+app.post("/teapot", (_req: Request, res: Response) => {
   res.status(418).send("I'm a teapot");
 });
 
