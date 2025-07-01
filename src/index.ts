@@ -49,8 +49,11 @@ app.get("/repair-bay", (_req: Request, res: Response) => {
 });
 
 app.get("/phase-change-diagram", (req: Request, res: Response) => {
+  console.log("req.query", req.query);
+  console.log("req.query.pressure", req.query.pressure);
   const p = parseFloat(req.query.pressure as string);
   if (isNaN(p)) {
+    console.log("Invalid pressure value");
     res.status(400).json({ error: "Invalid pressure value" });
     return;
   }
@@ -59,12 +62,14 @@ app.get("/phase-change-diagram", (req: Request, res: Response) => {
   const max = saturationData[saturationData.length - 1].pressure;
 
   if (p < min || p > max) {
+    console.log("Pressure out of saturation range");
     res.status(404).json({ error: "Pressure out of saturation range" });
     return;
   }
 
   const exact = saturationData.find((point) => point.pressure === p);
   if (exact) {
+    console.log("Exact match found");
     res.json({
       specific_volume_liquid: Number(exact.v_liq.toFixed(4)),
       specific_volume_vapor: Number(exact.v_vap.toFixed(4)),
@@ -87,6 +92,7 @@ app.get("/phase-change-diagram", (req: Request, res: Response) => {
   const v_liq = interpolate(p1.pressure, p2.pressure, p1.v_liq, p2.v_liq, p);
   const v_vap = interpolate(p1.pressure, p2.pressure, p1.v_vap, p2.v_vap, p);
 
+  console.log("Interpolated values:", v_liq.toFixed(4), v_vap.toFixed(4));
   res.json({
     specific_volume_liquid: Number(v_liq.toFixed(4)),
     specific_volume_vapor: Number(v_vap.toFixed(4)),
